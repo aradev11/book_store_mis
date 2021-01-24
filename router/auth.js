@@ -32,13 +32,13 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-     // Check if Email invalid
-     const { error } = loginUserValidation(req.body);
-     if(error) return res.status(400).send(error.details[0].message);
-     // Check if Email is already Exists
-     const user = await User.findOne({ email: req.body.email });
-     if(!user) return res.status(400).send("Email is Wrong");
-     // Check dehash password and check it for login
+    // Check if Email invalid
+    const { error } = loginUserValidation(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    // Check if Email is already Exists
+    const user = await User.findOne({ email: req.body.email });
+    if(!user) return res.status(400).send("Email is Wrong");
+    // Check dehash password and check it for login
     const validPWD = await bcrypt.compare(req.body.pwd, user.pwd);
     if(!validPWD) return res.status(400).send("Invalid Password");
     

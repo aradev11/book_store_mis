@@ -23,5 +23,16 @@ const loginUserValidation = date => {
     return schema.validate(date);
 };
 
+//Post From Validation
+const postValidation = date => {
+    const schema = Joi.object({
+        title: Joi.string().min(6).max(100).required(),
+        text: Joi.string().max(255).min(6).required(),
+        postBy: Joi.string().required(),
+    });
+    return schema.validate(date);
+}
+
 module.exports.regUserValidation = regUserValidation;
 module.exports.loginUserValidation = loginUserValidation;
+module.exports.postValidation = postValidation;
