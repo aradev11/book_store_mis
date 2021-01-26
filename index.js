@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 // Import Rotues
 const authRoute  = require('./router/auth');
 const postRoute = require("./router/posts");
+const bookRoute = require("./router/book");
 
 // Process Envirnment Secrit Configes
 env.config();
@@ -18,8 +19,7 @@ mongoose
     .connect(process.env.DB_CONN, { 
         useNewUrlParser: true,  
         useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false  })
+        useCreateIndex: true  })
     .then(() => {
         console.log("DB Successfully Connected");
     })
@@ -38,8 +38,9 @@ app.use(morgan("dev"));
 
 // Router MiddleWares
 app.use('/api/user', authRoute);
-app.use('/api/posts', postRoute);
+app.use('/api/post', postRoute);
+app.use('/api/book', bookRoute);
 
-app.listen(process.env.PORT || 4000, (req, res) => {
-    console.log("SERVER IS STILL RUNNING")
+app.listen(process.env.PORT || 3000, (req, res) => {
+    console.log(`SERVER IS RUNNING ON POST:[${process.env.PORT || 3000}]`)
 });

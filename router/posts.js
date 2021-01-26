@@ -8,7 +8,7 @@ const {
     updatePost    
 } = require("../controller/post.controller");
 
-router.get("/", allPosts);
+router.get("/", verfied, allPosts);
 router.post("/", verfied, addPost);
 router.get("/:id", verfied, singlePost);
 router.delete("/:id", verfied, deletePost);

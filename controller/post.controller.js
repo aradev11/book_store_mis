@@ -29,17 +29,17 @@ exports.singlePost = async (req, res) => {
 // Post Data to Datebase
 exports.addPost = async (req, res) => {
         try {
-       // Check if Email invalid
+       // Check if post invalid
         const { error } = postValidation(req.body);
         if(error) return res.status(400).send(error.details[0].message);
-        // Check if Email is already Exists
+        // Check if post is already Exists
         const postExists = await Post.findOne({ title: req.body.title });
         if(postExists) return res.status(400).send("Post is Already Exsits");
 
         const newPost = new post({
             title: req.body.title,
             text: req.body.text,
-            postBy: req.user
+            postBy: req.body.postBy
         });
 
         const savedPost = await newPost.save();
