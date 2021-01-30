@@ -8,9 +8,9 @@ const {
     updatePost    
 } = require("../controller/post.controller");
 
-router.get("/", verfied, allPosts);
+router.get("/", allPosts);
 router.post("/", verfied, addPost);
-router.get("/:id", verfied, singlePost);
+router.get("/:id", singlePost);
 router.delete("/:id", verfied, deletePost);
 router.put("/:id", verfied, updatePost);
 

@@ -1,3 +1,4 @@
+const { Double } = require("mongodb");
 const mongoose = require("mongoose");
 
 const bookSchema = new mongoose.Schema({
@@ -11,20 +12,41 @@ const bookSchema = new mongoose.Schema({
         type: String,
         required: true,
         max: 100,
-        min: 6,
-        default: ""
+        min: 6
     },
     author: {
-        type: Number,
-        required: true,
+        aut_id: {
+            type: String,
+            required: true,
+        },
+        aut_name: {
+            type: String,
+            required: true,
+        },
+        aut_lname: {
+            type: String,
+            required: true
+        }
     },
     cat: {
-        type: Number,
-        required: true
+        cat_id: {
+            type: String,
+            required: true,
+        },
+        cat_name: {
+            type: String,
+            required: true,
+        }
     },
     lang: {
-        type: Number,
-        required: true
+        lang_id: {
+            type: String,
+            required: true,
+        },
+        lang_name: {
+            type: String,
+            required: true,
+        }
     },
     edition: {
         type: Number,
@@ -42,13 +64,80 @@ const bookSchema = new mongoose.Schema({
         required: true
     },
     unit: {
-        type: Number, 
-        required: true,
+        unit_id: {
+            type: String,
+            required: true
+        },
+        unit_type: {
+            type: String,
+            required: true
+        }
     },
     price: {
         type: Number,
         required: true
-    }    
+    },
+    details: {
+        view: {
+            type: Number,
+            required: true,
+            default: 0
+        },
+        content: {
+            type: String,
+            required: true,
+            min: 10,
+            max: 255
+        },
+        shelf: {
+            type: String,
+            min: 6,
+            max: 150,
+            required: true
+        },
+        publisher: {
+            pub_id: {
+                type: String,
+                required: true,
+            },
+            pub_name: {
+                type: String,
+                required: true,
+            }
+        },
+        pdf: {
+            type: String,
+            required: true,
+        },
+        img: {
+            type: String,
+            required: true,
+        },
+        transilator: {
+            trans_id: {
+                type: String,
+                
+            },
+            trans_name: {
+                type: String,
+                
+            },
+            trans_lname: {
+                type: String,
+                
+            }
+        },
+        enter: {
+            type: Date, 
+            required: true,
+            default: Date.now
+        },
+        pub_date: {
+            type: Date,
+            required: true,
+            default: Date.now
+        } 
+    }
 });
 
 module.exports = mongoose.model("books", bookSchema);

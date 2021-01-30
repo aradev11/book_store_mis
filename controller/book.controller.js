@@ -1,5 +1,4 @@
 const Book = require("../models/book.model");
-const BookDetails = require('../models/bookDetail.model');
 
 //IMPORT BOOK VALIDATION BEFORE DATA SEND TO DATABASE 
 const { bookValidation } = require('../security/validation');
@@ -17,7 +16,8 @@ exports.getAllBook = async (req, res) => {
 // GET THE SINGLE DATA BY ID
 exports.getSingleBook = async (req, res) => {
     try {
-        const singBook = await Book.findByID(req.params.id);
+        const singBook = await Book.findById(req.params.id);
+        if(!singBook) return res.status(400).send("There is No book");
         // send respone as single post
         res.send(singBook);
     } catch (err) {
@@ -27,34 +27,62 @@ exports.getSingleBook = async (req, res) => {
 
 // POST DATA TO DATABASE
 exports.addBook = async (req, res) => {
-    try {
-        // CHECK IF POST IS INVALID
-        const { error } = bookValidation(req.body);
-        if(error) return res.status(400).send(error.details[0].message);
-        // CHECK IF BOOK IS ALREADY EXISTS 
-        const bookExists = await Book.findOne({
-            name: res.body.name,
-            edition: res.body.edition
-        });
-        if(bookExists) return res.sendStatus(400).send(`There is a book with name of ${res.body.name} and edition of ${res.body.edition}`);
-
-        const newBook = new Book({
+    // CHECK IF POST IS INVALID
+    const { error } = bookValidation(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    // CHECK IF BOOK IS ALREADY EXISTS 
+    const bookExists = await Book.findOne({
+        name: res.body.name,
+        edition: res.body.edition
+    });
+    if(bookExists) return res.status(400).send(`There is a book with name of ${res.body.name} and edition of ${res.body.edition}`);
+    
+    const newBook = new Book({
             isbn: req.body.isbn,
             name: req.body.name,
-            author: req.body.author,
-            cat: req.body.cat,
-            lang: req.body.lang,
+            author: {
+                aut_id: req.body.author.aut_id,
+                aut_name: req.body.author.aut_name,
+                aut_lname: req.body.author.aut_lname
+            },
+            cat: {
+                cat_id: req.body.cat.cat_id,
+                cat_name: req.body.cat.cat_name
+            },
+            lang: {
+                lang_id: req.body.lang.lang_id,
+                lang_name: req.body.lang.lang_name
+            },
             edition: req.body.edition,
-            volume: req.body.edition,
+            volume: req.body.volume,
             wrapper: req.body.wrapper,
-            unit: req.body.unit,
-            price: req.body.price
-        });
-
+            unit: {
+                unit_id: req.body.unit.unit_id,
+                unit_type: req.body.unit.unit_type
+            },
+            price: req.body.price,
+            details: {
+                view: req.body.details.view,
+                content: req.body.details.content,
+                transilator: {
+                    trans_id: req.body.details.transilator.trans_id,
+                    trans_name: req.body.details.transilator.trans_name,
+                    trans_lname: req.body.details.transilator.trans_lname
+                },
+                shelf: req.body.details.shelf,
+                publisher: {
+                    pub_id: req.body.details.publisher.pub_id,
+                    pub_name: req.body.details.publisher.pub_name
+                },
+                pdf: req.body.details.pdf,
+                img: req.body.details.img,
+            }
+    });
+    try {
         const savedBook = await newBook.save();
-        res.send(201).json(savedBook);
+        res.status(201).send(savedBook);
     } catch (err) {
-        res.sendStatus(400).json(err);
+        res.status(400).json(err);
     }
 };
 
@@ -81,22 +109,3 @@ exports.deleteBook = async (req, res) => {
     }
 };
 
-// DELETE BOOKS WITH MULTIPLE ID'S
-exports.deleteMultipleBook = async (req, res) => {
-    try {
-        const getTheBookIds = await Book.findById(req.params.id);
-        deleteMultipleBook = [...deleteMultipleBook, getTheBookIds];
-        
-    } catch (err) {
-        res.status(400).json(err);
-    }
-}
-
-
-exports.getBookDetails = async (req, res) => {
-    try {
-
-    } catch (err) {
-        res.sendStatus(400).json(err);
-    }
-}

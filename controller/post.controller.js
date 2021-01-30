@@ -18,7 +18,6 @@ exports.allPosts =  async (req, res) => {
 exports.singlePost = async (req, res) => {
     try {
         const singlePost = await Post.findById(req.params.id);
-
         res.send(singlePost);
     } catch (err) {
         res.status(400).json(err);
@@ -28,20 +27,19 @@ exports.singlePost = async (req, res) => {
 
 // Post Data to Datebase
 exports.addPost = async (req, res) => {
-        try {
-       // Check if post invalid
-        const { error } = postValidation(req.body);
-        if(error) return res.status(400).send(error.details[0].message);
-        // Check if post is already Exists
-        const postExists = await Post.findOne({ title: req.body.title });
-        if(postExists) return res.status(400).send("Post is Already Exsits");
+     // Check if post invalid
+     const { error } = postValidation(req.body);
+     if(error) return res.status(400).send(error.details[0].message);
+     // Check if post is already Exists
+     const postExists = await Post.findOne({ title: req.body.title });
+     if(postExists) return res.status(400).send("Post is Already Exsits");
 
-        const newPost = new post({
-            title: req.body.title,
-            text: req.body.text,
-            postBy: req.body.postBy
-        });
-
+     const newPost = new Post({
+         title: req.body.title,
+         text: req.body.text,
+         postBy: req.body.postBy
+     });
+    try {
         const savedPost = await newPost.save();
         res.status(201).json(savedPost);
     } catch (err) {
@@ -52,6 +50,9 @@ exports.addPost = async (req, res) => {
 
 // Edit each Post by Id of any post
 exports.updatePost = async (req, res) => {
+    // Check if post invalid
+    const { error } = postValidation(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
     try {
         const updateResult = await Post.findByIdAndUpdate(req.params.id, req.body); 
         res.status(200).json(updateResult);
