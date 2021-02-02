@@ -8,85 +8,122 @@ var _require = require('../security/validation'),
 
 
 exports.allCustomer = function _callee(req, res) {
-  var allCustomer;
+  var dtl, allCustomer;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.prev = 0;
-          _context.next = 3;
+          dtl = req.query.dtl;
+          allCustomer = "";
+          _context.prev = 2;
+
+          if (!(dtl == "show")) {
+            _context.next = 9;
+            break;
+          }
+
+          _context.next = 6;
+          return regeneratorRuntime.awrap(Customer.find().populate('addresses.city').populate('addresses.country'));
+
+        case 6:
+          allCustomer = _context.sent;
+          _context.next = 12;
+          break;
+
+        case 9:
+          _context.next = 11;
           return regeneratorRuntime.awrap(Customer.find());
 
-        case 3:
+        case 11:
           allCustomer = _context.sent;
 
+        case 12:
           if (allCustomer) {
-            _context.next = 6;
+            _context.next = 14;
             break;
           }
 
           return _context.abrupt("return", res.status(404).send("Not Found"));
 
-        case 6:
+        case 14:
           res.status(201).send(allCustomer);
-          _context.next = 12;
+          _context.next = 20;
           break;
 
-        case 9:
-          _context.prev = 9;
-          _context.t0 = _context["catch"](0);
+        case 17:
+          _context.prev = 17;
+          _context.t0 = _context["catch"](2);
           res.status(400).json(_context.t0);
 
-        case 12:
+        case 20:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 9]]);
+  }, null, null, [[2, 17]]);
 }; // Get Single data from database 
 
 
 exports.singleCustomer = function _callee2(req, res) {
-  var singleCustomer;
+  var dtl, id, singleCustomer;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.prev = 0;
-          _context2.next = 3;
-          return regeneratorRuntime.awrap(Customer.findById(req.params.id));
+          dtl = req.query.dtl;
+          id = req.params.id;
+          singleCustomer = "";
+          _context2.prev = 3;
 
-        case 3:
+          if (!(dtl === "show")) {
+            _context2.next = 10;
+            break;
+          }
+
+          _context2.next = 7;
+          return regeneratorRuntime.awrap(Customer.findById(id).populate('addresses.country').populate('addresses.city'));
+
+        case 7:
+          singleCustomer = _context2.sent;
+          _context2.next = 13;
+          break;
+
+        case 10:
+          _context2.next = 12;
+          return regeneratorRuntime.awrap(Customer.findById(id));
+
+        case 12:
           singleCustomer = _context2.sent;
 
+        case 13:
           if (singleCustomer) {
-            _context2.next = 6;
+            _context2.next = 15;
             break;
           }
 
           return _context2.abrupt("return", res.status(404).send("NOT FOUND"));
 
-        case 6:
+        case 15:
           res.status(201).send(singleCustomer);
-          _context2.next = 12;
+          _context2.next = 21;
           break;
 
-        case 9:
-          _context2.prev = 9;
-          _context2.t0 = _context2["catch"](0);
+        case 18:
+          _context2.prev = 18;
+          _context2.t0 = _context2["catch"](3);
           res.status(400).json(_context2.t0);
 
-        case 12:
+        case 21:
         case "end":
           return _context2.stop();
       }
     }
-  }, null, null, [[0, 9]]);
+  }, null, null, [[3, 18]]);
 }; // Add data to database 
 
 
 exports.addCustomer = function _callee3(req, res) {
-  var _customerValidation, error, customerExists, newCustomer, savedCustomer;
+  var _customerValidation, error, _req$body, id_card, first_name, last_name, customerExists, newCustomer, savedCustomer;
 
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
@@ -103,74 +140,57 @@ exports.addCustomer = function _callee3(req, res) {
           return _context3.abrupt("return", res.status(400).send(error.details[0].message));
 
         case 3:
-          _context3.next = 5;
+          // Check if Exists
+          _req$body = req.body, id_card = _req$body.id_card, first_name = _req$body.first_name, last_name = _req$body.last_name;
+          _context3.next = 6;
           return regeneratorRuntime.awrap(Customer.findOne({
-            _id: req.body._id,
-            id_card: req.body.id_card
+            id_card: id_card,
+            first_name: first_name,
+            last_name: last_name
           }));
 
-        case 5:
+        case 6:
           customerExists = _context3.sent;
 
           if (!customerExists) {
-            _context3.next = 8;
+            _context3.next = 9;
             break;
           }
 
           return _context3.abrupt("return", res.status(400).send("Customer Already Exists"));
 
-        case 8:
-          newCustomer = new Customer({
-            id_card: req.body.id_card,
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            is_active: req.body.is_active,
-            details: {
-              street: req.body.details.street,
-              street2: req.body.details.street2,
-              country: {
-                _id: req.body.details.country._id,
-                cnt_name: req.body.details.country.cnt_name,
-                cnt_code: req.body.details.country.cnt_code
-              },
-              city: {
-                _id: req.body.details.city._id,
-                city_name: req.body.details.city.city_name
-              },
-              email: req.body.details.email,
-              phone: req.body.details.phone
-            }
-          });
-          _context3.prev = 9;
-          _context3.next = 12;
+        case 9:
+          newCustomer = new Customer(req.body);
+          _context3.prev = 10;
+          _context3.next = 13;
           return regeneratorRuntime.awrap(newCustomer.save());
 
-        case 12:
+        case 13:
           savedCustomer = _context3.sent;
 
           if (savedCustomer) {
-            _context3.next = 15;
+            _context3.next = 16;
             break;
           }
 
           return _context3.abrupt("return", req.status(400).send("Customer Not Add"));
 
-        case 15:
+        case 16:
           res.status(201).send(savedCustomer);
-          _context3.next = 21;
+          _context3.next = 22;
           break;
 
-        case 18:
-          _context3.prev = 18;
-          _context3.t0 = _context3["catch"](9);
+        case 19:
+          _context3.prev = 19;
+          _context3.t0 = _context3["catch"](10);
           res.status(400).json(_context3.t0);
 
-        case 21:
+        case 22:
         case "end":
           return _context3.stop();
       }
     }
-  }, null, null, [[9, 18]]);
+  }, null, null, [[10, 19]]);
 }; // delete Customer from database
 
 

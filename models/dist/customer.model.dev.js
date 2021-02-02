@@ -20,7 +20,25 @@ var customerSchema = new mongoose.Schema({
     type: Boolean,
     "default": false
   },
-  details: {
+  email: {
+    type: String,
+    required: true,
+    min: 6,
+    max: 100
+  },
+  phone: {
+    type: Number,
+    required: true
+  },
+  code: {
+    type: Number,
+    required: true
+  },
+  date: {
+    type: Date,
+    "default": Date.now
+  },
+  addresses: [{
     street: {
       type: String,
       required: true,
@@ -30,46 +48,21 @@ var customerSchema = new mongoose.Schema({
       type: String,
       max: 100
     },
-    country: {
-      _id: {
-        type: String,
-        required: true
-      },
-      cnt_name: {
-        type: String,
-        required: true
-      },
-      cnt_code: {
-        type: Number,
-        required: true
-      }
+    address_type: {
+      type: Number,
+      required: true,
+      "default": 0,
+      min: 0,
+      max: 1
     },
     city: {
-      _id: {
-        type: String,
-        required: true
-      },
-      city_name: {
-        type: String,
-        required: true
-      }
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "cities"
     },
-    email: {
-      type: String,
-      required: true,
-      min: 6,
-      max: 100
-    },
-    phone: {
-      type: String,
-      required: true,
-      max: 10,
-      min: 9
-    },
-    date: {
-      type: Date,
-      "default": Date.now
+    country: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'countries'
     }
-  }
+  }]
 });
 module.exports = mongoose.model("cutomer", customerSchema);

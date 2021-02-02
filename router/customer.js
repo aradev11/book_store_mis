@@ -14,5 +14,6 @@ router.get('/:id', singleCustomer);
 router.post('/', verfied, addCustomer);
 router.delete('/:id', verfied, deleteCustomer);
 router.put('/:id', verfied, editCustomer);
+    
 
 module.exports = router;

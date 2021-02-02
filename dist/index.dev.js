@@ -25,7 +25,13 @@ var authorRoute = require("./router/author");
 
 var transilatorRoute = require("./router/transilator");
 
-var customerRoute = require("./router/customer"); // Process Envirnment Secrit Configes
+var customerRoute = require("./router/customer");
+
+var countryRoute = require('./router/country');
+
+var cityRoute = require("./router/city");
+
+var employeeRoute = require('./router/employee'); // Process Envirnment Secrit Configes
 
 
 env.config(); //Database Connection
@@ -56,6 +62,9 @@ app.use('/api/book', bookRoute);
 app.use('/api/author', authorRoute);
 app.use('/api/transilator', transilatorRoute);
 app.use('/api/customer', customerRoute);
+app.use('/api/country', countryRoute);
+app.use('/api/city', cityRoute);
+app.use('/api/employee', employeeRoute);
 app.listen(process.env.PORT || 3000, function (req, res) {
   console.log("SERVER IS RUNNING ON POST:[".concat(process.env.PORT || 3000, "]"));
 });

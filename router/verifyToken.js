@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 // You can call this function inside any router you want to be protected or be private
 module.exports = function (req, res, next) {    
-    const token = req.header('auth-token');
+    const token = req.header('auth-token'); 
     if(!token) return res.status(401).send("Access Denid");
 
     try {
@@ -10,6 +10,6 @@ module.exports = function (req, res, next) {
         req.user = verified;
         next();
     } catch (err) {
-        res.status(400).send("Invalid Token")
+        res.status(400).send("Invalid Token");
     }
 }

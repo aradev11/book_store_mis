@@ -3,10 +3,17 @@ const Customer = require("../models/customer.model");
 // import validation
 const { customerValidation } = require('../security/validation');
 
+
 //Get all data from database
 exports.allCustomer = async (req, res) => {
+    const { dtl } = req.query;
+    let allCustomer = "";
     try {
-        const allCustomer = await Customer.find();
+        if(dtl == "show") allCustomer = 
+        await Customer.find()
+        .populate('addresses.city')
+        .populate('addresses.country');
+        else allCustomer = await Customer.find();
         if(!allCustomer) return res.status(404).send("Not Found");
 
         res.status(201).send(allCustomer);
@@ -17,8 +24,15 @@ exports.allCustomer = async (req, res) => {
 
 // Get Single data from database 
 exports.singleCustomer = async (req, res) => {
+    const { dtl } = req.query;
+    const { id } = req.params;
+    let singleCustomer = "";
     try {
-        const singleCustomer = await Customer.findById(req.params.id);
+        if(dtl === "show") singleCustomer = await Customer
+        .findById(id)
+        .populate('addresses.country')
+        .populate('addresses.city');
+        else singleCustomer = await Customer.findById(id);
         if(!singleCustomer) return res.status(404).send("NOT FOUND");
 
         res.status(201).send(singleCustomer);
@@ -33,34 +47,21 @@ exports.addCustomer = async (req, res) => {
     const { error } = customerValidation(res.body);
     if(error) return res.status(400).send(error.details[0].message);
     // Check if Exists
+    const {
+        id_card,
+        first_name,
+        last_name
+    } = req.body;
     const customerExists = await Customer.findOne({ 
-        _id: req.body._id,
-        id_card: req.body.id_card 
+        id_card,
+        first_name,
+        last_name
     });
     if(customerExists) return res.status(400).send("Customer Already Exists");
 
-    const newCustomer = new Customer({
-        id_card: req.body.id_card,
-        first_name: req.body.first_name, 
-        last_name: req.body.last_name,
-        is_active: req.body.is_active,
-        details: {
-            street: req.body.details.street,
-            street2: req.body.details.street2,
-            country: {
-                _id: req.body.details.country._id,
-                cnt_name: req.body.details.country.cnt_name,
-                cnt_code: req.body.details.country.cnt_code
-            },
-            city: {
-                _id: req.body.details.city._id,
-                city_name: req.body.details.city.city_name
-            },
-            email: req.body.details.email,
-            phone: req.body.details.phone,
-        }
-    });
+    const newCustomer = new Customer(req.body);
     try {
+
         const savedCustomer = await newCustomer.save();
         if(!savedCustomer) return req.status(400).send("Customer Not Add");
 

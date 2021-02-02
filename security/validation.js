@@ -1,15 +1,14 @@
 //Validation ---
 const Joi = require('@hapi/joi');
-const { model } = require('mongoose');
 
 
 //Reister Form Validation
 const regUserValidation = date => {
     const schema = Joi.object({
-        name: Joi.string().min(6).required(),
-        lname: Joi.string().min(6).required(),
-        email: Joi.string().min(6).required().email(),
-        pwd: Joi.string().min(6).required()
+        user_name: Joi.string().required(),
+        user_type: Joi.string().required(),
+        pwd: Joi.string().min(6).required(),
+        emp: Joi.string()
     });
     return schema.validate(date);
 };
@@ -17,7 +16,7 @@ const regUserValidation = date => {
 //Reister Form Validation
 const loginUserValidation = date => {
     const schema = Joi.object({
-        email: Joi.string().min(6).required().email(),
+        user_name: Joi.string().required(),
         pwd: Joi.string().min(6).required()
     });
     return schema.validate(date);
@@ -79,6 +78,7 @@ const bookValidation = data => {
     return schema.validate(data);
 }
 
+// Author Validation
 const authorValidation = function authorValidation(data) {
     const schema = Joi.object({
       first_name: Joi.string().min(1).max(100).required(),
@@ -91,6 +91,7 @@ const authorValidation = function authorValidation(data) {
     return schema.validate(data);
 }
 
+// Transilator Validation
 const transilatorValidation = function transilatorValidation(data) {
     const schema = Joi.object({
       first_name: Joi.string().min(1).max(100).required(),
@@ -103,31 +104,58 @@ const transilatorValidation = function transilatorValidation(data) {
     return schema.validate(data);
 }
 
+// Customer Validation
 const customerValidation = function customerValidation(data) {
     const schema = Joi.object({
         id_card: Joi.number().max(100),
         first_name: Joi.string().required().max(100), 
         last_name: Joi.string().required().max(100),
         is_active: Joi.boolean(),
-        details: {
-            street: Joi.string().required().max(100),
-            street2: Joi.string().max(100),
-            country: {
-                _id: Joi.string().required(),
-                cnt_name: Joi.string().required(),
-                cnt_code: Joi.number().required()
-            },
-            city: {
-                _id: Joi.string().required(),
-                city_name: Joi.string().required()
-            },
-            email: Joi.string().email().required().min(6).max(100),
-            phone: Joi.number().required().min(9).max(10),
-        }
+        email: Joi.string().email().required().min(6).max(100),
+        phone: Joi.number().required(),
+        code: Joi.number().required(),
+        addresses: Joi.array(),
     });
     return schema.validate(data);
 }
 
+// Country Validation
+const countryValidation = function countryValidation(data) {
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        lang: Joi.array().required(),
+        code: Joi.number().required(),
+        city: Joi.array(),
+    });
+    return schema.validate(data);
+}
+
+// City Validation
+const cityValidation = function cityValidation(data) {
+    const schema = Joi.object({
+        name: Joi.string().required()
+    });
+    return schema.validate(data);
+}
+
+// Employess Validation
+const employeeValidation = function employeeValidation(data) {
+    const schema = Joi.object({
+        id_card: Joi.string().required(),
+        first_name: Joi.string().required().max(100),
+        last_name: Joi.string().required().max(100),
+        father_name: Joi.string().required().max(100),
+        is_active: Joi.boolean().required().default(false),
+        brand: Joi.string(),
+        contract: Joi.array(),
+        email: Joi.string().required().email(),
+        phone: Joi.number().required(),
+        auth: Joi.string(),
+        code: Joi.number().required(),
+        addresses: Joi.array()
+    }); 
+    return schema.validate(data);
+}
 
 module.exports.regUserValidation = regUserValidation;
 module.exports.loginUserValidation = loginUserValidation;
@@ -136,3 +164,6 @@ module.exports.bookValidation = bookValidation;
 module.exports.authorValidation = authorValidation;
 module.exports.transilatorValidation = transilatorValidation;
 module.exports.customerValidation = customerValidation;
+module.exports.countryValidation = countryValidation;
+module.exports.cityValidation = cityValidation;
+module.exports.employeeValidation = employeeValidation;

@@ -13,6 +13,9 @@ const bookRoute = require("./router/book");
 const authorRoute = require("./router/author");
 const transilatorRoute = require("./router/transilator");
 const customerRoute = require("./router/customer");
+const countryRoute = require('./router/country');
+const cityRoute = require("./router/city");
+const employeeRoute = require('./router/employee');
 
 // Process Envirnment Secrit Configes
 env.config();
@@ -46,6 +49,9 @@ app.use('/api/book', bookRoute);
 app.use('/api/author', authorRoute);
 app.use('/api/transilator', transilatorRoute);
 app.use('/api/customer', customerRoute);
+app.use('/api/country', countryRoute);
+app.use('/api/city', cityRoute);
+app.use('/api/employee', employeeRoute);
 
 app.listen(process.env.PORT || 3000, (req, res) => {
     console.log(`SERVER IS RUNNING ON POST:[${process.env.PORT || 3000}]`)
