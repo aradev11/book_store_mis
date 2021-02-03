@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const verfied = require('./verifyToken');
+const verfied = require('../middleware/protect');
 
 const {
     allCity,

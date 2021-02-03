@@ -1,10 +1,12 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
-const env = require('dotenv');
 const mongoose = require('mongoose');
 const morgan = require("morgan");
 const cores = require('cors');
 const bodyParser = require('body-parser');
+const db = require('./config/db.config');
+const errorHandler = require('./middleware/error');
 
 // Import Rotues
 const authRoute  = require('./router/auth');
@@ -18,20 +20,10 @@ const cityRoute = require("./router/city");
 const employeeRoute = require('./router/employee');
 
 // Process Envirnment Secrit Configes
-env.config();
+const PORT  = process.env.PORT || 5000;
 
 //Database Connection
-mongoose
-    .connect(process.env.DB_CONN, { 
-        useNewUrlParser: true,  
-        useUnifiedTopology: true,
-        useCreateIndex: true  })
-    .then(() => {
-        console.log("DB Successfully Connected");
-    })
-    .catch (err => {
-        console.log("DB_Err: " + err);
-    });
+db();
 
 //MiddleWares
 app.use(express.json());
@@ -40,10 +32,10 @@ app.use(cores());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // confiure moregam -- Morgan is a logger tool used to log all requests made on the server
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 // Router MiddleWares
-app.use('/api/user', authRoute);
+app.use('/api/auth', authRoute);
 app.use('/api/post', postRoute);
 app.use('/api/book', bookRoute);
 app.use('/api/author', authorRoute);
@@ -53,6 +45,14 @@ app.use('/api/country', countryRoute);
 app.use('/api/city', cityRoute);
 app.use('/api/employee', employeeRoute);
 
-app.listen(process.env.PORT || 3000, (req, res) => {
-    console.log(`SERVER IS RUNNING ON POST:[${process.env.PORT || 3000}]`)
+// Last MiddlerWare Should be Error Handler Message Response
+app.use(errorHandler); 
+
+const server = app.listen(PORT, (req, res) => {
+    console.log(`SERVER IS RUNNING ON POST:[${PORT}]`)
 });
+
+process.on("unhandledRejection", (err, promise) => {
+    console.log(`Logged Error: ${err}`);
+    server.close(() => process.exit(1));
+})

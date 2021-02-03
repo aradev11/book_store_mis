@@ -2,7 +2,7 @@
 
 var router = require('express').Router();
 
-var verfied = require('./verifyToken');
+var verfied = require('../middleware/protect');
 
 var _require = require("../controller/author.controller"),
     allAuthor = _require.allAuthor,

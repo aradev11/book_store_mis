@@ -1,32 +1,37 @@
-import { Button, DatePicker } from "antd";
+import { BrowserRouter } from 'react-router-dom';
 
-import logo from './logo.svg';
-import './App.css';
+import { Router } from './router';
+
+import { FooterComponent, NavbarComponent } from './components';
+
+import {
+  Layout
+} from 'antd';
+
+
+
+
+// Ant Design Css 
 import 'antd/dist/antd.css';
 
 
-
 function App() {
+const { Header, Footer } = Layout;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Button type="primary">PRESS ME</Button>
-        <br />
-        <DatePicker placeholder="select date" />
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        
+        <Header>
+          <NavbarComponent />
+        </Header>
+
+        <Router />
+        
+        <FooterComponent />
+      </div>
+    </BrowserRouter>
+    
   );
 }
 
