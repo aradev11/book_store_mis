@@ -1,11 +1,14 @@
 const mongoose = require('mongoose');
 
-const { ObjectId } = mongoose.Schema.Types;
 const userSchema = new mongoose.Schema({
     user_name: {
         type: String,
         required: true,
         max: 255
+    },
+    user_email: {
+        type: String,
+        required: true
     },
     pwd: {
         type: String,
@@ -24,10 +27,6 @@ const userSchema = new mongoose.Schema({
     is_active: {
         type: Boolean,
         default: false
-    },
-    emp: {
-        type: ObjectId,
-        ref: "employees"
     },
     date: {
         type: Date,

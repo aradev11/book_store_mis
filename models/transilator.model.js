@@ -15,7 +15,6 @@ const tranislatorSchema = new mongoose.Schema({
     },
     img: {
         type: String,
-        required: true,
     },
     about: {
         type: String,
@@ -23,6 +22,10 @@ const tranislatorSchema = new mongoose.Schema({
     },
     email: {
         type: String,
+    },
+    country: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'countries'
     },
     website: {
         type: String,

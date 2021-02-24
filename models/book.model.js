@@ -1,5 +1,6 @@
-const { Double } = require("mongodb");
 const mongoose = require("mongoose");
+
+const { ObjectId } = mongoose.Schema.Types;
 
 const bookSchema = new mongoose.Schema({
     isbn: {
@@ -10,43 +11,21 @@ const bookSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required: true,
-        max: 100,
-        min: 6
+        required: true
     },
     author: {
-        aut_id: {
-            type: String,
-            required: true,
-        },
-        aut_name: {
-            type: String,
-            required: true,
-        },
-        aut_lname: {
-            type: String,
-            required: true
-        }
+        type: ObjectId,
+        ref: "author"
     },
-    cat: {
-        cat_id: {
-            type: String,
-            required: true,
-        },
-        cat_name: {
-            type: String,
-            required: true,
+    cat: [
+        {
+            type: ObjectId,
+            ref: "category"
         }
-    },
+    ],
     lang: {
-        lang_id: {
-            type: String,
-            required: true,
-        },
-        lang_name: {
-            type: String,
-            required: true,
-        }
+        type: String,
+        required: true,
     },
     edition: {
         type: Number,
@@ -63,19 +42,20 @@ const bookSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    unit: {
-        unit_id: {
-            type: String,
-            required: true
+    price: {
+        unit: {
+            type: ObjectId,
+            ref: "unit"
         },
-        unit_type: {
-            type: String,
-            required: true
+        payable: {
+            type: Number,
+            required: true,
+            default: 0
         }
     },
-    price: {
-        type: Number,
-        required: true
+    date: {
+        type: Date,
+        default: Date.now
     },
     details: {
         view: {
@@ -96,14 +76,8 @@ const bookSchema = new mongoose.Schema({
             required: true
         },
         publisher: {
-            pub_id: {
-                type: String,
-                required: true,
-            },
-            pub_name: {
-                type: String,
-                required: true,
-            }
+            type: ObjectId,
+            ref: "publisher"
         },
         pdf: {
             type: String,
@@ -114,18 +88,8 @@ const bookSchema = new mongoose.Schema({
             required: true,
         },
         transilator: {
-            trans_id: {
-                type: String,
-                
-            },
-            trans_name: {
-                type: String,
-                
-            },
-            trans_lname: {
-                type: String,
-                
-            }
+            type: ObjectId,
+            ref: "transilator"
         },
         enter: {
             type: Date, 

@@ -1,0 +1,70 @@
+{
+    "HeaderItems": {
+        "NavbarComponent": {
+            "theme": "light",
+            "mode": "horizontal",
+            "items": [
+                {
+                    "name": "Books",
+                    "href": "/books",
+                    "icon": "",
+                    "access_level": ["admin", "customer", "employee"]
+                },
+                {
+                    "name": "Articals",
+                    "href": "/blog",
+                    "icon": ""
+                },
+                {
+                    "name": "Pricing",
+                    "href": "/price",
+                    "icon": ""
+
+                },
+                {
+                    "name": "About",
+                    "href": "/about",
+                    "icon": ""
+
+                },
+                {
+                    "name": "Contact-us",
+                    "href": "/contact",
+                    "icon": ""
+
+                },
+                {
+                    "name": "Community",
+                    "href": "/community",
+                    "icon": ""
+
+                }
+            ],
+            "itemss": [
+                {
+                    "name": "Dashboard",
+                    "href": "dashboard",
+                    "icon": "",
+                    "access_level": ["admin", "customer", "employee"]
+                },
+                {
+                    "name": "Books",
+                    "href": "books",
+                    "icon": "",
+                    "access_level": ["admin", "customer", "employee"]
+                },
+                {
+                    "name": "Articals",
+                    "href": "blog",
+                    "icon": ""
+                },
+                {
+                    "name": "Pricing",
+                    "href": "price",
+                    "icon": ""
+
+                }
+            ]
+        }
+    }
+}

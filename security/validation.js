@@ -6,9 +6,9 @@ const Joi = require('@hapi/joi');
 const regUserValidation = date => {
     const schema = Joi.object({
         user_name: Joi.string().required(),
+        user_email: Joi.string().required().email(),
         user_type: Joi.string().required(),
-        pwd: Joi.string().min(6).required(),
-        emp: Joi.string()
+        pwd: Joi.string().min(6).required()
     });
     return schema.validate(date);
 };
@@ -17,7 +17,7 @@ const regUserValidation = date => {
 const loginUserValidation = date => {
     const schema = Joi.object({
         user_name: Joi.string().required(),
-        pwd: Joi.string().min(6).required()
+        pwd: Joi.string().required()
     });
     return schema.validate(date);
 };
@@ -81,12 +81,13 @@ const bookValidation = data => {
 // Author Validation
 const authorValidation = function authorValidation(data) {
     const schema = Joi.object({
-      first_name: Joi.string().min(1).max(100).required(),
-      last_name: Joi.string().min(1).max(100).required(),
-      img: Joi.string().required(),
-      about: Joi.string().required(),
-      email: Joi.string().email(),
-      website: Joi.string()
+      first_name: Joi.string().min(1).max(100).required().trim(),
+      last_name: Joi.string().min(1).max(100).required().trim(),
+      img: Joi.string().replace(" ", "_"),
+      about: Joi.string().required().trim(),
+      country: Joi.string(),
+      email: Joi.string().email().trim(),
+      website: Joi.string().trim()
     });
     return schema.validate(data);
 }
@@ -96,7 +97,8 @@ const transilatorValidation = function transilatorValidation(data) {
     const schema = Joi.object({
       first_name: Joi.string().min(1).max(100).required(),
       last_name: Joi.string().min(1).max(100).required(),
-      img: Joi.string().required(),
+      img: Joi.string().trim(),
+      country: Joi.string(),
       about: Joi.string().required(),
       email: Joi.string().email(),
       website: Joi.string()
@@ -133,7 +135,8 @@ const countryValidation = function countryValidation(data) {
 // City Validation
 const cityValidation = function cityValidation(data) {
     const schema = Joi.object({
-        name: Joi.string().required()
+        name: Joi.string().required(),
+        country: Joi.string()
     });
     return schema.validate(data);
 }
@@ -141,19 +144,49 @@ const cityValidation = function cityValidation(data) {
 // Employess Validation
 const employeeValidation = function employeeValidation(data) {
     const schema = Joi.object({
-        id_card: Joi.string().required(),
-        first_name: Joi.string().required().max(100),
-        last_name: Joi.string().required().max(100),
-        father_name: Joi.string().required().max(100),
-        is_active: Joi.boolean().required().default(false),
-        brand: Joi.string(),
+        id_card: Joi.string().required().trim(),
+        first_name: Joi.string().required().max(100).trim(),
+        last_name: Joi.string().required().max(100).trim(),
+        father_name: Joi.string().max(100).trim(),
+        is_active: Joi.boolean().default(false),
+        dob: Joi.date().required(),
+        gender: Joi.string().required().trim(),
+        position: Joi.string().required().trim(),
         contract: Joi.array(),
-        email: Joi.string().required().email(),
+        email: Joi.string().required().email().trim(),
         phone: Joi.number().required(),
-        auth: Joi.string(),
-        code: Joi.number().required(),
+        auth: Joi.string().trim(),
+        describe: Joi.string().max(255),
         addresses: Joi.array()
     }); 
+    return schema.validate(data);
+}
+
+// Category Validation
+const categoryValidation = function categoryValidation(data) {
+    const schema = Joi.object({
+        title: Joi.string().required().trim()
+    });
+    return schema.validate(data);
+}
+
+// Unit Price validation
+const unitValidation = function unitValidation(data) {
+    const schema = Joi.object({
+        title: Joi.string().required().trim(),
+        code: Joi.string().required().trim(),
+        symbol: Joi.string().required().trim()
+    });
+    return schema.validate(data);
+}
+const publisherValidation = function publisherValidation(data) {
+    const schema = Joi.object({
+        name: Joi.string().required().trim(),
+        phone: Joi.number().required(),
+        email: Joi.string().required().trim().email(),
+        addresses: Joi.array(),
+        website: Joi.string()
+    })
     return schema.validate(data);
 }
 
@@ -167,3 +200,6 @@ module.exports.customerValidation = customerValidation;
 module.exports.countryValidation = countryValidation;
 module.exports.cityValidation = cityValidation;
 module.exports.employeeValidation = employeeValidation;
+module.exports.categoryValidation = categoryValidation;
+module.exports.unitValidation = unitValidation;
+module.exports.publisherValidation = publisherValidation;

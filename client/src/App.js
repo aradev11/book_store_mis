@@ -1,36 +1,31 @@
+import React, { StrictMode } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import { Router } from './router';
+// import { AuthContext } from './context/auth-context';
 
-import { FooterComponent, NavbarComponent } from './components';
+import Router from './router/routes';
+import FooterComponent from './components/footer/footer';
 
 import {
   Layout
 } from 'antd';
 
-
-
-
 // Ant Design Css 
 import 'antd/dist/antd.css';
 
 
-function App() {
-const { Header, Footer } = Layout;
-
+const App = () => {
+  // const { user, setUser, isAuthenticated, setIsAuthenticated } = useContext(AuthContext);
+ 
   return (
-    <BrowserRouter>
-      <div className="App">
-        
-        <Header>
-          <NavbarComponent />
-        </Header>
-
-        <Router />
-        
-        <FooterComponent />
-      </div>
-    </BrowserRouter>
+    <StrictMode>
+      <BrowserRouter>
+        <Layout className="App" style={{ height: "100%" }}>
+          <Router />
+          <FooterComponent />
+        </Layout>
+      </BrowserRouter>
+    </StrictMode>
     
   );
 }

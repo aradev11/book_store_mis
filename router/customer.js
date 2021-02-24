@@ -9,8 +9,8 @@ const {
     editCustomer
 } = require("../controller/customer.controller");
 
-router.get('/', allCustomer);
-router.get('/:id', singleCustomer);
+router.get('/', verfied, allCustomer);
+router.get('/:id', verfied, singleCustomer);
 router.post('/', verfied, addCustomer);
 router.delete('/:id', verfied, deleteCustomer);
 router.put('/:id', verfied, editCustomer);

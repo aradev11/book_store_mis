@@ -1,0 +1,38 @@
+.header-message-container,
+.header-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-title {
+    text-align: center;
+}
+
+.header-message-container {
+    height: 400px;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    animation: gradient 30s ease-in-out infinite;
+    background-size: 400% 400%;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.header-action button{
+    margin: 30px 10px;
+}
+.header-body {
+    font-size: large;
+    font-weight: 700;
+    margin: 40px 0px 10px 0px;
+}

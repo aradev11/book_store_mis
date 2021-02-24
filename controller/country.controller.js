@@ -4,84 +4,89 @@ const City = require("../models/city.model");
 // Import City Validation 
 const { countryValidation, cityValidation } = require("../security/validation");
 
+const ErrorResponse = require('../utils/error.response');
+
 // Get all data from database
-exports.allCountry = async (req, res) => {
+exports.allCountry = async (req, res, next) => {
     const { dtl } = req.query;
     try {
-        if(dtl == "show") allCountry = await Country.find().populate('cities'); 
-        else allCountry = await Country.find();
+        if(dtl == "show") data = await Country.find().populate('cities'); 
+        else data = await Country.find();
+        if(data.length === 0) return next(new ErrorResponse("No Value", 400));
+        res.status(200).json({success: true, data});
 
-        res.status(201).send(allCountry);
     } catch (err) {
-        res.status(400).json(err);
+        next(err);
     }
 }
 
 // Get single data from database
-exports.singleCountry = async (req, res) => {
+exports.singleCountry = async (req, res, next) => {
     const { dtl } = req.query;
     const { id } = req.params;
-    let singleCountry = "";
+    let data = "";
     try {
-        if(dtl === "show") singleCountry = await Country.findById(id).populate('cities');
-        else singleCountry = await Country.findById(id);
+        if(dtl === "show") data = await Country.findById(id).populate('cities');
+        else data = await Country.findById(id);
+        if(data.length === 0) return next(new ErrorResponse("No Value", 400));
 
-        if(!singleCountry) return res.status(400).send("No Country");
-
-        console.log(req.query)
-        res.status(200).send(singleCountry);
+        res.status(200).json({ success: true, data});
     } catch (err) {
-        res.status(400).json(err);
+        next(err);
     }
 }
 
 // Post data to database
-exports.addCountry = async (req, res) => {
+exports.addCountry = async (req, res, next) => {
+    const { name } = req.body;
     //check if validate 
     const { error } = countryValidation(req.body)
-    if(error) return res.status(400).send(error.details[0].message);
+    if(error) return next(new ErrorResponse(error.details[0].message, 400));
     // Check if dublicate
-    const countryExists = await Country.findOne({ name: req.body.name });
-    if(countryExists) return res.status(400).send("Country Duplicated");
+    const countryExists = await Country.findOne({ name });
+    if(countryExists) return next(new ErrorResponse("Country Duplicated", 204));
 
     // Creating Schema for new value
     const newCountry = new Country(req.body)
 
     try {
-        const savedCountry = await newCountry.save();
-        res.status(201).send(savedCountry);
+        const saved = await newCountry.save();
+        if(!saved) return next(new ErrorResponse("Value Not Saved", 400));
+
+        res.status(201).json({success: true, message: "Add Successfully"});
     } catch {
-        res.status(400).json(err);
+        next(err);
     }
 }
 
 // Delete data from database 
-exports.deleteCountry = async (req, res) => {
+exports.deleteCountry = async (req, res, next) => {
+    const { id }  = req.params;
     try {
-        const { id }  = req.params;
         const deleteCountry = await Country.remove({_id: id});
         const deleteRelativeCity = await City.remove({country: id});
-        if(!deleteRelativeCity || !deleteCountry) return res.status(401).send(`Country With id of: ${id} Not Delete`);
+        if(!deleteRelativeCity || !deleteCountry) return next(new ErrorResponse(`Value did Not Delete`, 401) );
 
-        res.status(200).send(`Country with id of: ${id} delete Successfully`);
+        res.status(200).send(`Value Delete Successfully`);
     } catch (err) {
-        res.status(400).json(err);
+        next(err);
     }
 }
 
 // Update data from database 
-exports.editCountry = async (req, res) => {
+exports.editCountry = async (req, res, next) => {
+    const { id } = req.params; 
     // Check if Country Value is Correct
     const { error } = countryValidation(req.body);
-    if(error) return res.status(400).send(error.details[0].message);
-    try {
-        const { id } = req.params; 
-        const updateResult = await Country.findByIdAndUpdate(id, req.body);
-        if(!updateResult) return res.status(400).send("Country Not Update");
+    if(error) return next(new ErrorResponse(error.details[0].message, 400));
 
-        res.status(201).send("Successfully Updated");
+    try {
+        const updateResult = await Country.findByIdAndUpdate(id, req.body);
+        if(!updateResult) return next(new ErrorResponse("Value Did Not Update", 400) );
+
+        res.status(201).json({success: true, message: "Successfully Updated"});
     } catch(err) {
-        res.status(400).json(err);
+        next(err);
     }
 }
 

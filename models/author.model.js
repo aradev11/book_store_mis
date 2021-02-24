@@ -15,11 +15,15 @@ const authorSchema = new mongoos.Schema({
     },
     img: {
         type: String,
-        required: true,
+        default: "avatar-default.png"
     },
     about: {
         type: String,
         required: true
+    },
+    country: {
+        type: mongoos.Schema.Types.ObjectId,
+        ref: 'countries'
     },
     email: {
         type: String,

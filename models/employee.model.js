@@ -10,7 +10,7 @@ const employeeSchema = new mongoose.Schema({
     first_name: {
         type: String,
         required: true,
-        max: 100, 
+        maxlength: 100, 
     },
     last_name: {
         type: String,
@@ -21,13 +21,26 @@ const employeeSchema = new mongoose.Schema({
         type: String,
         max: 100
     },
+    describe: {
+        type: String,
+        maxlength: 255,
+    },
+    gender: {
+        type: String,
+        enum: ["M", "F", "O"],
+        required: true,
+    },
+    dob: {
+        type: Date,
+        required: true,
+    },
+    position: {
+        type: String,
+        required: true,
+    },
     is_active: {
         type: Boolean,
         default: false
-    },
-    brand: {
-        type: ObjectId,
-        ref: "brand"
     },
     contract: [
         {
@@ -47,11 +60,7 @@ const employeeSchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'users'
     },
-    code: {
-        type: Number,
-        required: true
-    },
-    data: {
+    date: {
         type: Date,
         default: Date.now,
     },

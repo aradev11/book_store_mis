@@ -3,53 +3,52 @@ const Transilator = require("../models/transilator.model");
 //Import Transilator Validation
 const { transilatorValidation } = require("../security/validation");
 
-// Get all data from database
-exports.allTransilator = async (req, res) => {
-    try {
-        const allTransilator = await Transilator.find();
-        if(!allTransilator) return res.status(404).send("Not Found");
+// ERROR
+const ErrorResponse = require('../utils/error.response');
 
-        res.status(201).send(allTransilator);
+// Get all data from database
+exports.allTransilator = async (req, res, next) => {
+    try {
+        const data = await Transilator.find();
+        if(data.length === 0) return next(new ErrorResponse("No Value", 400));
+
+        res.status(201).json({success: true, data});
     } catch (err) {
-        res.send(400).json(err);
+        next(err);
     }
 }
 
 // Get all data by id from database 
-exports.singleTransilator = async (req, res) => {
+exports.singleTransilator = async (req, res, next) => {
+    const {id} = req.params;
     try {
-        const singleTransilator = await Transilator.findById(req.params.id);
-        res.status(201).send(singleTransilator);
+        const data = await Transilator.findById(id);
+        if(data.length === 0) return next(new ErrorResponse("No Value", 400));
+
+        res.status(201).json({success: true, data});
     } catch (err) {
-        res.status(400).json(err);
+        next(err);
     }
 }
 
 // Post single Data to database
-exports.addTransilator = async (req, res) => {
+exports.addTransilator = async (req, res, next) => {
+    const { first_name, last_name } = req.body;
     // Check validation
     const { error } = transilatorValidation(req.body);
-    if(error) return res.status(400).send(error.details[0].message);
+    if(error) return next(new ErrorResponse(error.details[0].message, 400) );
     // Check if Exists
-    const transilatorExists = await Transilator.findOne({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name
-    });
-    if(transilatorExists) return res.status(400).send("Post Already Exists");
+    const transilatorExists = await Transilator.findOne({ first_name, last_name });
+    if(transilatorExists) return next(new ErrorResponse("Value Already Exists", 204));
 
-    const newTransilator = new Transilator({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
-        img: req.body.img,
-        about: req.body.about,
-        email: req.body.email,
-        website: req.body.website
-    });
+    const newTransilator = new Transilator(req.body);
     try {
-        const savedTransilator = await newTransilator.save();
-        res.status(201).send(savedTransilator);
+        const saved = await newTransilator.save();
+        if(!saved) return next(new ErrorResponse("Value Not Add", 400));
+
+        res.status(201).json({success: true, message: "Add Successfully"});
     } catch (err) {  
-        res.status(400).json(err);
+        next(err);
     }
 }
 
