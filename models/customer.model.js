@@ -1,35 +1,35 @@
 const mongoose = require("mongoose");
 
 const customerSchema = new mongoose.Schema({
-    id_card: {
-        type: Number
+    c_id: {
+        type: String,
+        required: true,
     },
     first_name: {
         type: String,
         required: true,
         max: 100
-    }, 
+    },
     last_name: {
         type: String,
-        required: true,
         max: 100,
     },
     is_active: {
         type: Boolean,
-        default: false,
+        default: true,
     },
     email: {
         type: String,
-        required: true,
         min: 6,
-        max:100
+        max: 100
     },
     phone: {
         type: Number,
         required: true,
     },
-    code: {
-        type: Number,
+    gender: {
+        type: String,
+        enum: ["M", "F", "O"],
         required: true
     },
     date: {

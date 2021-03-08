@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
-// CREATING EMPLOYEE SCHEMA
 const { ObjectId } = mongoose.Schema.Types;
+
+// CREATING EMPLOYEE SCHEMA
 const employeeSchema = new mongoose.Schema({
     id_card: {
         type: String,
@@ -10,7 +11,7 @@ const employeeSchema = new mongoose.Schema({
     first_name: {
         type: String,
         required: true,
-        maxlength: 100, 
+        maxlength: 100,
     },
     last_name: {
         type: String,

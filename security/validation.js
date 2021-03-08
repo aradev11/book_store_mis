@@ -81,13 +81,13 @@ const bookValidation = data => {
 // Author Validation
 const authorValidation = function authorValidation(data) {
     const schema = Joi.object({
-      first_name: Joi.string().min(1).max(100).required().trim(),
-      last_name: Joi.string().min(1).max(100).required().trim(),
-      img: Joi.string().replace(" ", "_"),
-      about: Joi.string().required().trim(),
-      country: Joi.string(),
-      email: Joi.string().email().trim(),
-      website: Joi.string().trim()
+        first_name: Joi.string().min(1).max(100).required().trim(),
+        last_name: Joi.string().min(1).max(100).required().trim(),
+        img: Joi.string().replace(" ", "_"),
+        about: Joi.string().required().trim(),
+        country: Joi.string(),
+        email: Joi.string().email().trim(),
+        website: Joi.string().trim()
     });
     return schema.validate(data);
 }
@@ -95,13 +95,13 @@ const authorValidation = function authorValidation(data) {
 // Transilator Validation
 const transilatorValidation = function transilatorValidation(data) {
     const schema = Joi.object({
-      first_name: Joi.string().min(1).max(100).required(),
-      last_name: Joi.string().min(1).max(100).required(),
-      img: Joi.string().trim(),
-      country: Joi.string(),
-      about: Joi.string().required(),
-      email: Joi.string().email(),
-      website: Joi.string()
+        first_name: Joi.string().min(1).max(100).required(),
+        last_name: Joi.string().min(1).max(100).required(),
+        img: Joi.string().trim(),
+        country: Joi.string(),
+        about: Joi.string().required(),
+        email: Joi.string().email(),
+        website: Joi.string()
     });
     return schema.validate(data);
 }
@@ -109,13 +109,12 @@ const transilatorValidation = function transilatorValidation(data) {
 // Customer Validation
 const customerValidation = function customerValidation(data) {
     const schema = Joi.object({
-        id_card: Joi.number().max(100),
-        first_name: Joi.string().required().max(100), 
-        last_name: Joi.string().required().max(100),
+        c_id: Joi.string().required().max(100),
+        first_name: Joi.string().required().max(100),
+        last_name: Joi.string().max(100),
         is_active: Joi.boolean(),
-        email: Joi.string().email().required().min(6).max(100),
+        email: Joi.string().email().min(6).max(100),
         phone: Joi.number().required(),
-        code: Joi.number().required(),
         addresses: Joi.array(),
     });
     return schema.validate(data);
@@ -158,7 +157,7 @@ const employeeValidation = function employeeValidation(data) {
         auth: Joi.string().trim(),
         describe: Joi.string().max(255),
         addresses: Joi.array()
-    }); 
+    });
     return schema.validate(data);
 }
 
@@ -179,6 +178,8 @@ const unitValidation = function unitValidation(data) {
     });
     return schema.validate(data);
 }
+
+// Publisher Validation
 const publisherValidation = function publisherValidation(data) {
     const schema = Joi.object({
         name: Joi.string().required().trim(),
@@ -186,6 +187,30 @@ const publisherValidation = function publisherValidation(data) {
         email: Joi.string().required().trim().email(),
         addresses: Joi.array(),
         website: Joi.string()
+    })
+    return schema.validate(data);
+}
+
+// Contract Validation
+const contractValidation = function contractValidation(data) {
+    const sallary = Joi.object({
+        unit: Joi.string().required().trim(),
+        amount: Joi.number().required().trim(),
+        tax: Joi.number().required().default(15).trim()
+    });
+    const duration = Joi.object({
+        type: Joi.string().trim(),
+        time: Joi.number().trim()
+    });
+    const schema = Joi.object({
+        contract_id: Joi.string().required().min(6),
+        employee_id: Joi.string().trim(),
+        contract_type: Joi.string().required().trim().min(1),
+        present_time: Joi.string().required().trim(),
+        contract_data: Joi.date().required().trim(),
+        duration: Joi.array(duration),
+        sallary: Joi.array(sallary),
+        position: Joi.string().required().trim()
     })
     return schema.validate(data);
 }
@@ -203,3 +228,4 @@ module.exports.employeeValidation = employeeValidation;
 module.exports.categoryValidation = categoryValidation;
 module.exports.unitValidation = unitValidation;
 module.exports.publisherValidation = publisherValidation;
+module.exports.contractValidation = contractValidation;

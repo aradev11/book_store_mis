@@ -9,9 +9,8 @@ const { employeeValidation, regUserValidation } = require('../security/validatio
 exports.allEmployee = async (req, res, next) => {
     const { dtl, secret } = req.query;
     let allEmployees = "";
-    console.log(dtl)
     try {
-        if(dtl == "show") allEmployees = await Employee
+        if (dtl == "show") allEmployees = await Employee
             .find()
             .populate('brand')
             .populate('contract')
@@ -22,9 +21,9 @@ exports.allEmployee = async (req, res, next) => {
             .populate('auth');
         else allEmployees = await Employee.find();
 
-        if(allEmployees.length === 0) return next(new ErrorResponse("No Value", 204));
+        if (allEmployees.length === 0) return next(new ErrorResponse("No Value", 204));
 
-        res.status(201).json({ success: true, data: allEmployees});
+        res.status(201).json({ success: true, data: allEmployees });
     } catch (err) {
         next(err);
     }
@@ -36,7 +35,7 @@ exports.singleEmployee = async (req, res, next) => {
     const { id } = req.params;
     let singleValue = "";
     try {
-        if(dtl === "show") singleValue = await Employee
+        if (dtl === "show") singleValue = await Employee
             .find(id)
             .populate('brand')
             .populate('contract')
@@ -45,11 +44,11 @@ exports.singleEmployee = async (req, res, next) => {
         else if (dtl === "show" && secret === "admin") singleValue = await Employee
             .find(id)
             .populate('auth');
-        else singleValue = await Employee.findById({_id: id});
+        else singleValue = await Employee.findById({ _id: id });
 
-        if(singleValue.length === 0) return next(new ErrorResponse("No Value", 204));
+        if (singleValue.length === 0) return next(new ErrorResponse("No Value", 204));
 
-        res.status(201).json({success: true, data: singleValue});
+        res.status(201).json({ success: true, data: singleValue });
     } catch (err) {
         next(err);
     }
@@ -59,21 +58,21 @@ exports.singleEmployee = async (req, res, next) => {
 exports.addEmployee = async (req, res, next) => {
     // Check if Data is Validate
     const { error } = employeeValidation(req.body);
-    if(error) return next(new ErrorResponse(error.details[0].message, 400));
+    if (error) return next(new ErrorResponse(error.details[0].message, 400));
     // Check if Data is Duplicated
-    const employeeExists = await Employee.findOne({id_card: req.body.id_card});
-    if(employeeExists) return next(new ErrorResponse(`${req.body.id_card} Duplicated`, 400));
+    const employeeExists = await Employee.findOne({ id_card: req.body.id_card });
+    if (employeeExists) return next(new ErrorResponse(`${req.body.id_card} Duplicated`, 400));
 
-    const emailExists = await Employee.findOne({email: req.body.email});
-    if(emailExists) return next(new ErrorResponse(`${req.body.email} Is Already Exists`));
+    const emailExists = await Employee.findOne({ email: req.body.email });
+    if (emailExists) return next(new ErrorResponse(`${req.body.email} Is Already Exists`, 400));
 
     const newEmployee = new Employee(req.body);
 
     try {
         const savedEmployee = await newEmployee.save();
-        if(!savedEmployee) return next(new ErrorResponse("Enter Failed", 400))
+        if (!savedEmployee) return next(new ErrorResponse("Enter Failed", 400))
 
-        res.status(201).json({success: true, message: "Added Successfully"});
+        res.status(201).json({ success: true, message: "Added Successfully" });
     } catch (err) {
         next(err)
     }
@@ -85,10 +84,10 @@ exports.addUserAccount = async (req, res) => {
     const { id } = req.params;
     // Check if Data is Validate
     const { error } = regUserValidation(req.body);
-    if(error) return res.status(400).send(error.details[0].message);
+    if (error) return res.status(400).send(error.details[0].message);
     // Check if Data Dublicated
     const accountExists = await User.findOne({ user_name });
-    if(accountExists) return res.status(400).send(`${user_name} Account is Invalid`);
+    if (accountExists) return res.status(400).send(`${user_name} Account is Invalid`);
 
     // Get Employee
     const employee = await Employee.findById(id);
@@ -116,9 +115,9 @@ exports.deleteEmployee = async (req, res, next) => {
     const { id } = req.params;
     try {
         const deletedEmployee = await Employee.deleteOne({ _id: id }, (err, obj) => {
-            if(err) throw err;
+            if (err) throw err;
         });
-        if(!deletedEmployee) return next(new ErrorResponse("Value Not Deleted", 400));
+        if (!deletedEmployee) return next(new ErrorResponse("Value Not Deleted", 400));
 
         res.status(200).send(`Employee with id of: ${res.params.id} Delete Successfully`);
     } catch (err) {

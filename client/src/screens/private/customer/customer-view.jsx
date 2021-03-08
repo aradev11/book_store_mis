@@ -1,11 +1,11 @@
-import React, { useEffect ,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import axios from 'axios';
 // ERROR Component
 import Error from '../../../utils/error';
 
 // protect unAuthorized Users
-import { protect } from '../../../utils/protect';  
+import { protect } from '../../../utils/protect';
 
 // ANT
 import { Empty } from 'antd';
@@ -18,59 +18,59 @@ import { data } from '../../../data/layout/layout-config';
 import { ControlPanel } from '../../../components/controlpanel/controlpanel';
 
 
-const EmployeeView = ( { history } ) => {
-    const { url } = useRouteMatch();
-    const [privateData, setPrivateData] = useState([]);
+const EmployeeView = ({ history }) => {
+  const { url } = useRouteMatch();
+  const [privateData, setPrivateData] = useState([]);
 
-    // Check if not value or no result
-    const noData = !privateData || (privateData && privateData.length === 0);
+  // Check if not value or no result
+  const noData = !privateData || (privateData && privateData.length === 0);
 
-    // Create Columns of Tables
-    const { customerTable } = data;
+  // Create Columns of Tables
+  const { customerTable } = data;
 
-    const FetchPrivateDate = async () => {
-      const config = {
-          headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("auth-token")}`
-          }
-      }
-      try {
-          const { data } = await axios.get("/api/customer", config);
-          if(data) return setPrivateData(data);
-          
-      } catch (err) {
-          Error.notification.error(err.response.data.error);
+  const FetchPrivateDate = async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("auth-token")}`
       }
     }
+    try {
+      const { data } = await axios.get("/api/customer?dtl=show", config);
+      if (data || data.data) return setPrivateData(data.data);
 
-
-    const addHandler = () => {
-       history.push(`${url}/add`);
+    } catch (err) {
+      Error.notification.error(err.response.data.error);
     }
+  }
 
-    const deleteHandler = () => {
-      alert("delet Hander");
-    }
 
-    useEffect(() => {
-        protect(history);
-        FetchPrivateDate();
-    }, [history]);
-    
-    return  (
+  const addHandler = () => {
+    history.push(`${url}/add`);
+  }
+
+  const deleteHandler = () => {
+    alert("delet Hander");
+  }
+
+  useEffect(() => {
+    protect(history);
+    FetchPrivateDate();
+  }, [history]);
+
+  return (
     <>
       <ControlPanel type="view" />
-      {noData ? (<Empty />) : ( <Table 
-      columns={customerTable} 
-      data={privateData} 
-      addHandler={addHandler} 
-      deleteHandler={deleteHandler}
-      selectionType='radio'
-      />)} 
+      {noData ? (<Empty />) : (<Table
+        columns={customerTable}
+        data={privateData}
+        addHandler={addHandler}
+        deleteHandler={deleteHandler}
+        selectionType='radio'
+      />)}
     </>
-    )
-} 
+  )
+}
 
 
 export default EmployeeView;
