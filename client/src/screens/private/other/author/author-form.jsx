@@ -137,7 +137,6 @@ const AuthorForm = ({history}) => {
                     <Form.Item
                     label="Email Address"
                     name='email'
-                    rules={[{ required: true, message: 'Field Should not be Empty!' }]}
                     >    
                         <Input type='email' placeholder="example@gamil.com"  />           
                     </Form.Item>
